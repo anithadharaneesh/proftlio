@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Input Fields</title>
+  <style>
+    .input-container {
+      margin-bottom: 10px;
+    }
+    #drop {
+      margin-top: 40px;
+    }
+    .nested-dropdown {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div class="input-container">
+      <input type="text" value="My Arg">
+      <select>
+        <option>True</option>
+        <option>False</option>
+      </select>
+    </div>
+  </div>
+  <button onclick="addInput()">Add</button>
+
+  <div id="drop">
+    <select id="myDropdown">
+      <option value="option1">select</option>
+      <option value="option2">constant</option>
+      <option value="option3">argument</option>
+      <option value="option4">and</option>
+      <option value="option5">or</option>
+    </select>
+    <button id="resetButton">x</button>
+  </div> 
+
+  <script>
+    var dropdown = document.getElementById("myDropdown");
+    var defaultValue = dropdown.value;
+    var resetButton = document.getElementById("resetButton");
+    resetButton.addEventListener("click", function() {
+      dropdown.value = defaultValue;
+    });
+
+    function addInput() {
+      var container = document.getElementById("container");
+      var inputContainer = document.createElement("div");
+      inputContainer.className = "input-container";
+
+      var newInput = document.createElement("input");
+      newInput.type = "text";
+      inputContainer.appendChild(newInput);
+
+      var newDropdown = document.createElement("select");
+      newDropdown.addEventListener("change", function() {
+        var value = this.value;
+        var nestedDropdown = this.nextSibling;
+        if (value === "constant") {
+          if (!nestedDropdown || nestedDropdown.className !== "nested-dropdown") {
+            nestedDropdown = document.createElement("select");
+            nestedDropdown.className = "nested-dropdown";
+            var trueOption = document.createElement("option");
+            trueOption.text = "True";
+            nestedDropdown.appendChild(trueOption);
+            var falseOption = document.createElement("option");
+            falseOption.text = "False";
+            nestedDropdown.appendChild(falseOption);
+            this.parentNode.insertBefore(nestedDropdown, this.nextSibling);
+          }
+        } else {
+          if (nestedDropdown && nestedDropdown.className === "nested-dropdown") {
+            this.parentNode.removeChild(nestedDropdown);
+          }
+        }
+      });
+
+      var selectOption = document.createElement("option");
+      selectOption.text = "Select";
+      newDropdown.appendChild(selectOption);
+      var constantOption = document.createElement("option");
+      constantOption.text = "Constant";
+      newDropdown.appendChild(constantOption);
+      var argumentOption = document.createElement("option");
+      argumentOption.text = "Argument";
+      newDropdown.appendChild(argumentOption);
+      var andOption = document.createElement("option");
+      andOption.text = "And";
+      newDropdown.appendChild(andOption);
+      var orOption = document.createElement("option");
+      orOption.text = "Or";
+      newDropdown.appendChild(orOption);
+
+      inputContainer.appendChild(newDropdown);
+      container.appendChild(inputContainer);
+    }
+  </script>
+</body>
+</html>
